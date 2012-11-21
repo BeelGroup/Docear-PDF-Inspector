@@ -204,7 +204,6 @@ public class PdfDataExtractor {
 	public String getUniqueHashCode() throws IOException {
 		if(uniqueHash == null) {
 			onlyHashExtraction();
-			System.out.println("");
 		}
 		if(this.uniqueHash == null) {
 			return null;
