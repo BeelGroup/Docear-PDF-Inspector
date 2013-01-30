@@ -11,9 +11,11 @@ public class Configuration {
 	public static String NL = System.getProperty("line.separator");
 	
 	private String delimiter = "|";	
+	private boolean includeHeader = false;
 	private boolean includeExecutionTime = false;
 	private boolean extractHash = false;
 	private boolean extractTitle = false;
+	private boolean extractPlainText = false;
 	private boolean includeFilename = false;	
 	private boolean outAppend = false;
 	private File outFile;
@@ -39,11 +41,17 @@ public class Configuration {
 		if (delimiter != null) {
 			sb.append(" delimiter: ").append(delimiter).append(NL);
 		}
+		if (includeHeader) {
+			sb.append(" include header into returned data").append(NL);
+		}
 		if (extractHash) {
 			sb.append(" extract Hash from pdf file(s)").append(NL);
 		}
 		if (extractTitle) {
 			sb.append(" extract Titles from pdf file(s)").append(NL);
+		}
+		if (extractPlainText) {
+			sb.append(" extract plain text from pdf file(s)").append(NL);
 		}
 		if (includeFilename) {
 			sb.append(" include the file name of the processed pdf file").append(NL);
@@ -74,6 +82,14 @@ public class Configuration {
 		this.delimiter = delimiter;
 	}
 
+	public boolean isIncludeHeader() {
+		return includeHeader;
+	}
+
+	public void setIncludeHeader(boolean includeHeader) {
+		this.includeHeader = includeHeader;
+	}
+
 	public boolean isIncludeExecutionTime() {
 		return includeExecutionTime;
 	}
@@ -96,6 +112,14 @@ public class Configuration {
 
 	public void setExtractTitle(boolean extractTitle) {
 		this.extractTitle = extractTitle;
+	}
+
+	public boolean isExtractPlainText() {
+		return extractPlainText;
+	}
+
+	public void setExtractPlainText(boolean extractFullText) {
+		this.extractPlainText = extractFullText;
 	}
 
 	public boolean isIncludeFilename() {

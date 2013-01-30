@@ -53,10 +53,12 @@ public class OptionParser {
 		final Options options = new Options();
 		options.addOption("help", false, "print help and exit");
 		options.addOption("delimiter", true, "use a specific delimiter String, using \"|\" by default");
+		options.addOption("header", false, "include header into data");
 		options.addOption("time", false, "include time needed extracting the dataset");
 		options.addOption("name", false, "include the file name");
-		options.addOption("hash", false, "generat a unique hash for the PDF file that does not change when creating annotations in the PDF");
+		options.addOption("hash", false, "generate a unique hash for the PDF file that does not change even when creating annotations in the PDF");
 		options.addOption("title", false, "extract the title of the PDF file");
+		options.addOption("text", false, "extract plain text of the PDF file");
 		options.addOption("out", true, "write to a file");
 		options.addOption("outappend", false, "append to file, instead of overwriting it");
 		return options;
@@ -67,7 +69,7 @@ public class OptionParser {
 		String usage = "java -jar DocearPdfInspector [OPTION]... [FILE]..." + Configuration.NL;
 		usage += "Inspect and extract information of PDF file(s) and return them as a CSV file or on the command line. " +
 				"Files may contain wildcards." + Configuration.NL + Configuration.NL;
-		usage += "Selected fields are returned in the following order (if included): name, hash, title, time";
+		usage += "Selected fields are returned in the following order (if included): name, hash, title, text, time";
 		formater.printHelp(usage, options);
 	}
 
@@ -84,6 +86,9 @@ public class OptionParser {
 			}
 			if ((null != cl) && cl.hasOption("title")) {
 				config.setExtractTitle(true);
+			}
+			if ((null != cl) && cl.hasOption("text")) {
+				config.setExtractPlainText(true);
 			}
 			if ((null != cl) && cl.hasOption("name")) {
 				config.setIncludeFilename(true);
