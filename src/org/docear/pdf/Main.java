@@ -14,11 +14,14 @@ public class Main {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		Long startTime = System.currentTimeMillis();
 		final Configuration config = new OptionParser(args).getConfiguration();
 		try {
 			PrintStream out = config.getPrintStream();
 						
-			for (File file : config.getInFiles()) {		
+			for (File file : config.getInFiles()) {	
+				Long time = System.currentTimeMillis();
+				
 				boolean empty = true;
 				StringBuilder sb = new StringBuilder();
 				
@@ -54,14 +57,21 @@ public class Main {
 						System.err.println("Could not extract title for " + file.getAbsolutePath() + ": " +e.getMessage());
 					}
 				}
+				if (config.isIncludeExecutionTime()) {
+					if (!empty) {
+						sb.append(config.getDelimiter());
+						empty = false;
+					}
+					sb.append(System.currentTimeMillis() - time).append("ms");
+				}
 				
 				out.println(sb.toString());
 				
 			}
-    		System.out.println(config);
 		}
 		finally {
     		config.cleanUp();
+    		System.out.println("total execution time: " + (System.currentTimeMillis()-startTime));
 		}
 	}
 	

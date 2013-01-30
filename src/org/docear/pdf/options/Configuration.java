@@ -11,6 +11,7 @@ public class Configuration {
 	public static String NL = System.getProperty("line.separator");
 	
 	private String delimiter = "|";	
+	private boolean includeExecutionTime = false;
 	private boolean extractHash = false;
 	private boolean extractTitle = false;
 	private boolean includeFilename = false;	
@@ -73,6 +74,14 @@ public class Configuration {
 		this.delimiter = delimiter;
 	}
 
+	public boolean isIncludeExecutionTime() {
+		return includeExecutionTime;
+	}
+
+	public void setIncludeExecutionTime(boolean executionTime) {
+		this.includeExecutionTime = executionTime;
+	}
+
 	public boolean isExtractHash() {
 		return extractHash;
 	}
@@ -118,13 +127,7 @@ public class Configuration {
 			printStream = System.out;			
 		}
 		else {
-			try {				
-				if (outAppend) {
-					System.out.println("true");
-				}
-				else {
-					System.out.println("false");
-				}
+			try {
 				printStream = new PrintStream(new FileOutputStream(file, outAppend));				
 			}
 			catch (FileNotFoundException e) {

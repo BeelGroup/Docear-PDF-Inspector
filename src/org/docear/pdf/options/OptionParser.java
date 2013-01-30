@@ -53,6 +53,7 @@ public class OptionParser {
 		final Options options = new Options();
 		options.addOption("help", false, "print help and exit");
 		options.addOption("delimiter", true, "use a specific delimiter String, using \"|\" by default");
+		options.addOption("time", false, "include time needed extracting the dataset");
 		options.addOption("name", false, "include the file name");
 		options.addOption("hash", false, "generat a unique hash for the PDF file that does not change when creating annotations in the PDF");
 		options.addOption("title", false, "extract the title of the PDF file");
@@ -65,7 +66,8 @@ public class OptionParser {
 		final HelpFormatter formater = new HelpFormatter();
 		String usage = "java -jar DocearPdfInspector [OPTION]... [FILE]..." + Configuration.NL;
 		usage += "Inspect and extract information of PDF file(s) and return them as a CSV file or on the command line. " +
-				"Files may contain wildcards.";
+				"Files may contain wildcards." + Configuration.NL + Configuration.NL;
+		usage += "Selected fields are returned in the following order (if included): name, hash, title, time";
 		formater.printHelp(usage, options);
 	}
 
@@ -73,6 +75,9 @@ public class OptionParser {
 		try {
 			if ((null != cl) && cl.hasOption("delimiter")) {
 				config.setDelimiter(cl.getOptionValue("delimiter"));
+			}
+			if ((null != cl) && cl.hasOption("time")) {
+				config.setIncludeExecutionTime(true);
 			}
 			if ((null != cl) && cl.hasOption("hash")) {
 				config.setExtractHash(true);
