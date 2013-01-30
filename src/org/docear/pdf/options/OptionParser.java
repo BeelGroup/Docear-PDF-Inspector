@@ -53,8 +53,8 @@ public class OptionParser {
 		final Options options = new Options();
 		options.addOption("help", false, "print help and exit");
 		options.addOption("delimiter", true, "use a specific delimiter String, using \"|\" by default");
-		options.addOption("header", false, "include header into data");
-		options.addOption("time", false, "include time needed extracting the dataset");
+		options.addOption("header", false, "include header into the data set");
+		options.addOption("time", false, "include time needed extracting the data set");
 		options.addOption("name", false, "include the file name");
 		options.addOption("hash", false, "generate a unique hash for the PDF file that does not change even when creating annotations in the PDF");
 		options.addOption("title", false, "extract the title of the PDF file");
@@ -83,6 +83,9 @@ public class OptionParser {
 			}
 			if ((null != cl) && cl.hasOption("hash")) {
 				config.setExtractHash(true);
+			}
+			if ((null != cl) && cl.hasOption("header")) {
+				config.setIncludeHeader(true);
 			}
 			if ((null != cl) && cl.hasOption("title")) {
 				config.setExtractTitle(true);

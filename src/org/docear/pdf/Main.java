@@ -18,7 +18,7 @@ public class Main {
 		try {
 			PrintStream out = config.getPrintStream();
 
-			if (config.isIncludeHeader()) {
+			if (config.isIncludeHeader()) {				
 				printHeader(config, out);
 			}
 
@@ -94,7 +94,7 @@ public class Main {
 	private static void printHeader(Configuration config, PrintStream out) {
 		StringBuilder sb = new StringBuilder();
 		boolean empty = true;
-
+	
 		if (config.isIncludeFilename()) {
 			sb.append("file name");
 			empty = false;
@@ -128,6 +128,8 @@ public class Main {
 			}
 			sb.append("execution time");
 		}
+		
+		out.println(sb.toString());
 	}
 
 }
