@@ -7,5 +7,9 @@
 	<classpathentry kind="lib" path="lib/jpod/isrt.jar"/>
 	<classpathentry kind="lib" path="lib/jpod/jbig2.jar"/>
 	<classpathentry kind="lib" path="lib/jpod/jPod.jar"/>
+	<classpathentry kind="lib" path="lib/commons-cli/commons-cli-1.2-javadoc.jar"/>
+	<classpathentry kind="lib" path="lib/commons-cli/commons-cli-1.2.jar"/>
+	<classpathentry kind="lib" path="lib/commons-io/commons-io-2.4-javadoc.jar"/>
+	<classpathentry kind="lib" path="lib/commons-io/commons-io-2.4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
