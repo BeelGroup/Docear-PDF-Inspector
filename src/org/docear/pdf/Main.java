@@ -41,7 +41,9 @@ public class Main {
 					}
 					try {
 						String hash = extractor.getUniqueHashCode();
-						sb.append(hash);
+						if (hash != null) {
+							sb.append(hash);
+						}
 					}
 					catch (IOException e) {
 						System.err.println("Could not extract hash for " + file.getAbsolutePath() + ": " + e.getMessage());
@@ -54,7 +56,9 @@ public class Main {
 					}
 					try {
 						String title = extractor.extractTitle();
-						sb.append(title);
+						if (title != null) {
+							sb.append(title);
+						}
 					}
 					catch (IOException e) {
 						System.err.println("Could not extract title for " + file.getAbsolutePath() + ": " + e.getMessage());
@@ -65,9 +69,11 @@ public class Main {
 						sb.append(config.getDelimiter());
 						empty = false;
 					}
-					try {
+					try {						
 						String text = extractor.extractPlainText();
-						sb.append(text);
+						if (text != null) {
+							sb.append(text);
+						}
 					}
 					catch (IOException e) {
 						System.err.println("Could not extract text for " + file.getAbsolutePath() + ": " + e.getMessage());
