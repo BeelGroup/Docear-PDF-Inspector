@@ -12,7 +12,7 @@ public class Configuration {
 	
 	private String delimiter = "|";	
 	private boolean includeHeader = false;
-	private boolean includeExecutionTime = false;
+	private boolean includeDuration = false;
 	private boolean extractHash = false;
 	private boolean extractTitle = false;
 	private boolean extractPlainText = false;
@@ -90,12 +90,12 @@ public class Configuration {
 		this.includeHeader = includeHeader;
 	}
 
-	public boolean isIncludeExecutionTime() {
-		return includeExecutionTime;
+	public boolean isIncludeDuration() {
+		return includeDuration;
 	}
 
-	public void setIncludeExecutionTime(boolean executionTime) {
-		this.includeExecutionTime = executionTime;
+	public void setIncludeDuration(boolean duration) {
+		this.includeDuration = duration;
 	}
 
 	public boolean isExtractHash() {

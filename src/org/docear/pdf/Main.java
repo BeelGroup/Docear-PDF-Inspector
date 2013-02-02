@@ -29,17 +29,17 @@ public class Main {
 				StringBuilder sb = new StringBuilder();
 
 				PdfDataExtractor extractor = new PdfDataExtractor(file);
-
+				
 				if (config.isIncludeFilename()) {
 					sb.append(file.getAbsolutePath());
 					empty = false;
 				}
 				if (config.isExtractHash()) {
-					if (!empty) {
-						sb.append(config.getDelimiter());
-						empty = false;
+					if (!empty) {					
+						sb.append(config.getDelimiter());						
 					}
 					try {
+						empty = false;
 						String hash = extractor.getUniqueHashCode();
 						if (hash != null) {
 							sb.append(hash);
@@ -52,9 +52,9 @@ public class Main {
 				if (config.isExtractTitle()) {
 					if (!empty) {
 						sb.append(config.getDelimiter());
-						empty = false;
 					}
 					try {
+						empty = false;
 						String title = extractor.extractTitle();
 						if (title != null) {
 							sb.append(title);
@@ -67,9 +67,9 @@ public class Main {
 				if (config.isExtractPlainText()) {
 					if (!empty) {
 						sb.append(config.getDelimiter());
-						empty = false;
 					}
-					try {						
+					try {
+						empty = false;
 						String text = extractor.extractPlainText();
 						if (text != null) {
 							sb.append(text);
@@ -79,11 +79,11 @@ public class Main {
 						System.err.println("Could not extract text for " + file.getAbsolutePath() + ": " + e.getMessage());
 					}
 				}
-				if (config.isIncludeExecutionTime()) {
+				if (config.isIncludeDuration()) {
 					if (!empty) {
 						sb.append(config.getDelimiter());
-						empty = false;
 					}
+					empty = false;
 					sb.append(System.currentTimeMillis() - time).append("ms");
 				}
 
@@ -101,7 +101,7 @@ public class Main {
 		StringBuilder sb = new StringBuilder();
 		boolean empty = true;
 	
-		if (config.isIncludeFilename()) {
+		if (config.isIncludeFilename()) {			
 			sb.append("file name");
 			empty = false;
 		}
@@ -127,7 +127,7 @@ public class Main {
 			sb.append("text");
 			
 		}
-		if (config.isIncludeExecutionTime()) {
+		if (config.isIncludeDuration()) {
 			if (!empty) {
 				sb.append(config.getDelimiter());
 				empty = false;
