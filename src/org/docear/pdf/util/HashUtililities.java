@@ -1,5 +1,6 @@
 package org.docear.pdf.util;
 
+import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -142,7 +143,14 @@ public class HashUtililities {
 		return nHashVal.toString(16);
 	}
 	public static String hashSHA2(String str) {
-		return hashSHA2(str.getBytes());
+		try {
+			return hashSHA2(str.getBytes("UTF-8"));
+		}
+		catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		
+		return null;
 	}
 	public static String hashSHA2(byte[] str) {
 		try {
