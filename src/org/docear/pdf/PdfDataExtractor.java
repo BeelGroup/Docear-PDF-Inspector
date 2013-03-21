@@ -132,11 +132,8 @@ public class PdfDataExtractor {
 				}
 				catch (Exception ex) {
 					COSInfoDict info = document.getInfoDict();
-					try {
+					if (info != null) {
 						title = info.getTitle();
-					}
-					catch(Exception e) {
-						e.printStackTrace();
 					}
 				}
 			
