@@ -6,12 +6,14 @@ import de.intarsys.pdf.font.PDFontStyle;
 public class PdfTextEntity implements Comparable<PdfTextEntity>{
 	private final PDFontStyle fontStyle;
 	public final double fontSize;
-	public final int line;
+	public final int startLine;
+	public int endLine;
 	
 	public PdfTextEntity(PDFont style, double size, int line) {
 		this.fontSize = size;
 		this.fontStyle = style.getFontStyle();
-		this.line = line;
+		this.startLine = line;
+		this.endLine = line+1;
 	}
 
 	public int compareTo(PdfTextEntity entity) {
@@ -39,11 +41,16 @@ public class PdfTextEntity implements Comparable<PdfTextEntity>{
 		else if(!fontStyle.getLabel().contains("Italic") && entity.fontStyle.getLabel().contains("Italic")) {
 			return 1;
 		}
-		else if(line < entity.line) {
+		// line comparison
+		else if(startLine < entity.startLine) {
 			return -1;
 		}
-		else if((line-1) > (entity.line)) {
+		else if((startLine) > (entity.endLine)) {
 			return 1;
+		}
+		
+		if(startLine == entity.endLine) {
+			entity.endLine++;
 		}
 		return 0;
 	}

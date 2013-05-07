@@ -90,7 +90,7 @@ public class CSFormatedTextExtractor extends CSCharacterParser {
 		if (dX < maxDX) {
 			if (dY > maxDY && current != null && current.length() > 0) {
 				append(" ");
-				line+= Math.round(dY/rect.getHeight());
+				line += Math.round(dY/rect.getHeight());
 				
 			}
 		} else {
@@ -99,7 +99,7 @@ public class CSFormatedTextExtractor extends CSCharacterParser {
 					append(" ");
 				} else {
 					append(" ");
-					line+= Math.round(dY/rect.getHeight());
+					line += Math.round(dY/rect.getHeight());
 				}
 			}
 		}
