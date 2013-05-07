@@ -45,12 +45,15 @@ public class PdfTextEntity implements Comparable<PdfTextEntity>{
 		else if(startLine < entity.startLine) {
 			return -1;
 		}
-		else if((startLine) > (entity.endLine)) {
+		else if((startLine) > (entity.endLine) || (entity.endLine-entity.startLine) > 8) {
 			return 1;
 		}
 		
 		if(startLine == entity.endLine) {
 			entity.endLine++;
+			if((entity.endLine-entity.startLine) > 8) {
+				return 1;
+			}
 		}
 		return 0;
 	}
