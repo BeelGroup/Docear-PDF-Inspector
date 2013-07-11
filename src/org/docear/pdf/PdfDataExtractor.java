@@ -22,8 +22,6 @@ import de.intarsys.pdf.content.CSDeviceBasedInterpreter;
 import de.intarsys.pdf.content.CSException;
 import de.intarsys.pdf.content.text.CSTextExtractor;
 import de.intarsys.pdf.cos.COSInfoDict;
-import de.intarsys.pdf.cos.COSRuntimeException;
-import de.intarsys.pdf.parser.COSLoadException;
 import de.intarsys.pdf.pd.PDDocument;
 import de.intarsys.pdf.pd.PDPage;
 import de.intarsys.pdf.pd.PDPageNode;
@@ -35,6 +33,7 @@ public class PdfDataExtractor {
 	private CharSequenceFilter filter = new ReplaceLigaturesFilter();
 	private final File file; 
 	private String uniqueHash = null;
+	private PDDocument document;
 	
 	public PdfDataExtractor(URI filePath) {
 		this(new File(filePath));		
@@ -48,17 +47,11 @@ public class PdfDataExtractor {
 	}
 	
 	public String extractPlainText() throws IOException {
-		PDDocument document;
-		try {
-			document = getPDDocument();
-		} catch (Exception ex) {
-			throw new IOException(ex);
-		}	
 		StringBuilder sb = new StringBuilder();
 		try {
-			extractText(document.getPageTree(), sb);
+			extractText(getDocument().getPageTree(), sb);
 		} finally {
-			document.close();
+			close();
 		}
 		return sb.toString();
 	}
@@ -88,14 +81,8 @@ public class PdfDataExtractor {
 	public String extractTitle() throws IOException {
 		int TITLE_MIN_LENGTH = 2;
 		String title = null;
-		PDDocument document;
-		try {
-			document = getPDDocument();
-		} catch (Exception ex) {
-			throw new IOException(ex);
-		}
 		try {			
-			PDPage page = document.getPageTree().getFirstPage();
+			PDPage page = getDocument().getPageTree().getFirstPage();
 			
 			if (page.isPage()) {
 				try {
@@ -111,7 +98,7 @@ public class PdfDataExtractor {
 						map = handler.getMap();
 						entry = map.firstEntry();
 						if(entry == null) {
-							COSInfoDict info = document.getInfoDict();
+							COSInfoDict info = getDocument().getInfoDict();
 							title = info.getTitle();
 						}
 					}
@@ -131,17 +118,15 @@ public class PdfDataExtractor {
 					//System.out.println(map);
 				}
 				catch (Exception ex) {
-					COSInfoDict info = document.getInfoDict();
+					COSInfoDict info = getDocument().getInfoDict();
 					if (info != null) {
 						title = info.getTitle();
 					}
 				}
-			
-				
-			}				
+			}
 		}
 		finally {
-			document.close();
+			close();
 		}
 		if(title != null) {
 			try {
@@ -153,16 +138,10 @@ public class PdfDataExtractor {
 	}
 
 	private void onlyHashExtraction() throws IOException {
-		PDDocument document;
-		try {
-			document = getPDDocument();
-		} catch (Exception ex) {
-			throw new IOException(ex);
-		}
 		try {			
-			PDPage page = document.getPageTree().getFirstPage();			
+			PDPage page = getDocument().getPageTree().getFirstPage();
 			if (page.isPage()) {
-				try {					
+				try {
 					if(!page.cosGetContents().basicIterator().hasNext()) {
 						page = page.getNextPage();
 					}
@@ -172,15 +151,14 @@ public class PdfDataExtractor {
 						UniqueImageHashExtractor handler = new UniqueImageHashExtractor();
 						tryImageExtraction(page, handler);
 						uniqueHash = handler.getUniqueHash();
-						
 					}
 				}
 				catch (Exception ex) {
-				}		
-			}				
+				}
+			}
 		}
 		finally {
-			document.close();
+			close();
 		}
 	}
 
@@ -223,10 +201,39 @@ public class PdfDataExtractor {
 		return true;
 	}
 
-	private PDDocument getPDDocument() throws IOException,	COSLoadException, COSRuntimeException {
-		FileLocator locator = new FileLocator(this.file);		
-		PDDocument document = PDDocument.createFromLocator(locator);
-		locator = null;
-		return document;
+	public PDDocument getDocument() throws IOException {
+		synchronized (this) {
+			try {
+				if(document == null) {
+					FileLocator locator = new FileLocator(this.file);		
+					document = PDDocument.createFromLocator(locator);
+					locator = null;
+				}
+				return document;
+			}
+			catch (Exception e) {
+				throw new IOException(e);
+			}
+		}
+	}
+	
+	protected final void finalize() { 
+		close();
+	}
+	
+	public boolean close() {
+		synchronized (this) {
+			if(document != null) {
+				try {
+					document.close();
+					document = null;
+				} catch (IOException e) {
+					e.printStackTrace();
+					return false;
+				}
+				
+			}
+			return true;
+		}
 	}
 }

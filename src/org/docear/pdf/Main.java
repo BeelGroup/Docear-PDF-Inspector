@@ -29,65 +29,69 @@ public class Main {
 				StringBuilder sb = new StringBuilder();
 
 				PdfDataExtractor extractor = new PdfDataExtractor(file);
-				
-				if (config.isIncludeFilename()) {
-					sb.append(file.getAbsolutePath());
-					empty = false;
-				}
-				if (config.isExtractHash()) {
-					if (!empty) {					
-						sb.append(config.getDelimiter());						
-					}
-					try {
+				try {
+					if (config.isIncludeFilename()) {
+						sb.append(file.getAbsolutePath());
 						empty = false;
-						String hash = extractor.getUniqueHashCode();
-						if (hash != null) {
-							sb.append(hash);
+					}
+					if (config.isExtractHash()) {
+						if (!empty) {					
+							sb.append(config.getDelimiter());						
+						}
+						try {
+							empty = false;
+							String hash = extractor.getUniqueHashCode();
+							if (hash != null) {
+								sb.append(hash);
+							}
+						}
+						catch (IOException e) {
+							System.err.println("Could not extract hash for " + file.getAbsolutePath() + ": " + e.getMessage());
 						}
 					}
-					catch (IOException e) {
-						System.err.println("Could not extract hash for " + file.getAbsolutePath() + ": " + e.getMessage());
-					}
-				}
-				if (config.isExtractTitle()) {
-					if (!empty) {
-						sb.append(config.getDelimiter());
-					}
-					try {
-						empty = false;
-						String title = extractor.extractTitle();
-						if (title != null) {
-							sb.append(title);
+					if (config.isExtractTitle()) {
+						if (!empty) {
+							sb.append(config.getDelimiter());
+						}
+						try {
+							empty = false;
+							String title = extractor.extractTitle();
+							if (title != null) {
+								sb.append(title);
+							}
+						}
+						catch (IOException e) {
+							System.err.println("Could not extract title for " + file.getAbsolutePath() + ": " + e.getMessage());
 						}
 					}
-					catch (IOException e) {
-						System.err.println("Could not extract title for " + file.getAbsolutePath() + ": " + e.getMessage());
-					}
-				}
-				if (config.isExtractPlainText()) {
-					if (!empty) {
-						sb.append(config.getDelimiter());
-					}
-					try {
-						empty = false;
-						String text = extractor.extractPlainText();
-						if (text != null) {
-							sb.append(text);
+					if (config.isExtractPlainText()) {
+						if (!empty) {
+							sb.append(config.getDelimiter());
+						}
+						try {
+							empty = false;
+							String text = extractor.extractPlainText();
+							if (text != null) {
+								sb.append(text);
+							}
+						}
+						catch (IOException e) {
+							System.err.println("Could not extract text for " + file.getAbsolutePath() + ": " + e.getMessage());
 						}
 					}
-					catch (IOException e) {
-						System.err.println("Could not extract text for " + file.getAbsolutePath() + ": " + e.getMessage());
+					if (config.isIncludeDuration()) {
+						if (!empty) {
+							sb.append(config.getDelimiter());
+						}
+						empty = false;
+						sb.append(System.currentTimeMillis() - time).append("ms");
 					}
+					out.println(sb.toString());
 				}
-				if (config.isIncludeDuration()) {
-					if (!empty) {
-						sb.append(config.getDelimiter());
-					}
-					empty = false;
-					sb.append(System.currentTimeMillis() - time).append("ms");
+				finally {
+					extractor.close();
+					extractor = null;
 				}
-
-				out.println(sb.toString());
 
 			}
 		}
