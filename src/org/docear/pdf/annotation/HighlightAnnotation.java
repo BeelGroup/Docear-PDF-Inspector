@@ -2,6 +2,7 @@ package org.docear.pdf.annotation;
 
 import org.docear.pdf.feature.APDMetaObject;
 import org.docear.pdf.feature.AObjectType;
+import org.docear.pdf.feature.COSObjectContext;
 
 public class HighlightAnnotation extends APDMetaObject {
 
@@ -12,10 +13,10 @@ public class HighlightAnnotation extends APDMetaObject {
 	};
 	/***********************************************************************************
 	 * CONSTRUCTORS
+	 * @param context 
 	 **********************************************************************************/
-	protected HighlightAnnotation(long uid) {
-		super(uid);
-		// TODO Auto-generated constructor stub
+	protected HighlightAnnotation(long uid, COSObjectContext context) {
+		super(uid, context);
 	}
 	
 	/***********************************************************************************

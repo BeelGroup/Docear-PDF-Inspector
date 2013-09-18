@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.docear.pdf.feature.APDMetaObject;
 import org.docear.pdf.feature.APDObjectDestination;
+import org.docear.pdf.feature.COSObjectContext;
 import org.docear.pdf.feature.CachedPDMetaObjectExtractor;
 import org.docear.pdf.feature.PageDestination;
 
@@ -102,12 +103,10 @@ public class AnnotationExtractor extends CachedPDMetaObjectExtractor {
 	private APDMetaObject getComment(PDAnnotation annotation) {
 		if ((annotation.getClass() == PDAnyAnnotation.class || annotation.getClass() == PDTextAnnotation.class) && !ignoreComments()) {
 			Integer objectNumber = annotation.cosGetObject().getIndirectObject().getObjectNumber();
-			APDMetaObject meta = new CommentAnnotation(getOrCreateUID(annotation));
+			COSObjectContext context = new COSObjectContext(annotation);
+			APDMetaObject meta = new CommentAnnotation(getOrCreateUID(context), context);
 			meta.setObjectNumber(objectNumber);
 			meta.setText(annotation.getContents());
-			if (keepObjectReference()) {
-				meta.setObjectReference(annotation);
-			}
 			meta.setDestination(getDestination(annotation));
 			return meta;
 		}
@@ -122,7 +121,8 @@ public class AnnotationExtractor extends CachedPDMetaObjectExtractor {
 				|| annotation.getClass() == PDSquigglyAnnotation.class)
 				&& !ignoreHighlights()) {
 			Integer objectNumber = annotation.cosGetObject().getIndirectObject().getObjectNumber();
-			APDMetaObject meta = new HighlightAnnotation(getOrCreateUID(annotation));
+			COSObjectContext context = new COSObjectContext(annotation);
+			APDMetaObject meta = new HighlightAnnotation(getOrCreateUID(context), context);
 			meta.setObjectNumber(objectNumber);
 			// String text = extractAnnotationText(pdPage, (PDTextMarkupAnnotation)annotation);
 			// prefer Title from Contents (So updates work)
@@ -147,10 +147,6 @@ public class AnnotationExtractor extends CachedPDMetaObjectExtractor {
 						}
 					}
 				}
-			}
-
-			if (keepObjectReference()) {
-				meta.setObjectReference(annotation);
 			}
 			
 			if (meta.getText() == null) {

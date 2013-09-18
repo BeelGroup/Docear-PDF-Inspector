@@ -12,14 +12,16 @@ public abstract class APDMetaObject {
 	public static final COSName UNIQUE_IDENTIFIER = COSName.constant("dcr_uid");
 	public static final Random random = new Random();
 	private final long uid;
+	private final COSObjectContext context;
 	private int objectNumber = -1;
 	private String text;
-	private PDObject ref;
 	private APDObjectDestination destination;
 	private List<APDMetaObject> children;
 	
-	protected APDMetaObject(long uid) {
+	
+	protected APDMetaObject(long uid, COSObjectContext context) {
 		this.uid  = uid;
+		this.context = context;
 	}
 	public abstract AObjectType getType();
 	
@@ -47,12 +49,11 @@ public abstract class APDMetaObject {
 		return this.text;
 	}
 	
-	public void setObjectReference(PDObject ref) {
-		this.ref = ref;
-	}
-	
 	public PDObject getObjectReference() {
-		return this.ref;
+		if(context == null) {
+			return null;
+		}
+		return (PDObject) context.getCOSObject();
 	}
 	
 	public void setDestination(APDObjectDestination dest) {
@@ -76,5 +77,9 @@ public abstract class APDMetaObject {
 			children = new ArrayList<APDMetaObject>();
 		}
 		return children;
+	}
+	
+	public COSObjectContext getContext() {
+		return this.context;
 	}
 }

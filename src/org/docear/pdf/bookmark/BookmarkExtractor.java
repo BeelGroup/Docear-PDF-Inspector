@@ -10,6 +10,7 @@ import java.util.List;
 import org.docear.pdf.feature.APDMetaObject;
 import org.docear.pdf.feature.CachedPDMetaObjectExtractor;
 import org.docear.pdf.feature.AObjectType;
+import org.docear.pdf.feature.COSObjectContext;
 import org.docear.pdf.feature.PageDestination;
 import org.docear.pdf.feature.UriDestination;
 
@@ -78,15 +79,13 @@ public class BookmarkExtractor extends CachedPDMetaObjectExtractor {
 		@SuppressWarnings("unchecked")
 		List<PDOutlineItem> children = parent.getChildren();
 		for (PDOutlineItem child : children) {
-			Bookmark bm = new Bookmark(getOrCreateUID(child));
+			COSObjectContext context = new COSObjectContext(child);
+			Bookmark bm = new Bookmark(getOrCreateUID(context), context);
 			setBookmarkDestination(bm, child);
 			int objectNumber = child.cosGetObject().getIndirectObject().getObjectNumber();
 			bm.setObjectNumber(objectNumber);
 			bm.setText(child.getTitle());
 			
-			if (keepObjectReference()) {
-				bm.setObjectReference(child);
-			}
 			if(child.getChildren().size() > 0) {
 				getBookmarks(child, bm.getChildren());
 			}
@@ -97,21 +96,18 @@ public class BookmarkExtractor extends CachedPDMetaObjectExtractor {
 
 	private void setBookmarkDestination(Bookmark bookmark, PDOutlineItem item) {
 		AObjectType type = null;
-		if (item.cosGetField(PDOutlineItem.DK_A) instanceof COSNull) {
-			Integer page = null;
-			try {
-				page = getBookmarkDestinationPage(item);
-			} catch (Exception e) {
-			}
+		Integer page = null;
+		try {
+			page = getBookmarkDestinationPage(item);
 			if (page == null) {
 				type = Bookmark.BOOKMARK_WITHOUT_DESTINATION;
 			}
 			else {
 				bookmark.setDestination(new PageDestination(page));
 			}
-			
+		} catch (Exception e1) {
 		}
-		else {
+		if(page == null) {
 			URI uri = getBookmarkDestinationUri(item);
 			if (uri != null) {
 				type = Bookmark.BOOKMARK_WITH_URI;

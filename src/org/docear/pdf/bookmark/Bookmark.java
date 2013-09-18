@@ -2,6 +2,7 @@ package org.docear.pdf.bookmark;
 
 import org.docear.pdf.feature.APDMetaObject;
 import org.docear.pdf.feature.AObjectType;
+import org.docear.pdf.feature.COSObjectContext;
 
 public class Bookmark extends APDMetaObject {
 	public static final AObjectType BOOKMARK = new AObjectType() {
@@ -27,10 +28,11 @@ public class Bookmark extends APDMetaObject {
 	
 	/***********************************************************************************
 	 * CONSTRUCTORS
+	 * @param context 
 	 **********************************************************************************/
 	
-	public Bookmark(long uid) {
-		super(uid);
+	public Bookmark(long uid, COSObjectContext context) {
+		super(uid, context);
 		
 	}
 	

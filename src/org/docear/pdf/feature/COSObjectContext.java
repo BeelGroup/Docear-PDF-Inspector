@@ -1,33 +1,36 @@
-package org.docear.pdf.annotation;
+package org.docear.pdf.feature;
 
-import org.docear.pdf.feature.APDMetaObject;
-import org.docear.pdf.feature.AObjectType;
-import org.docear.pdf.feature.COSObjectContext;
+import de.intarsys.pdf.cos.COSBasedObject;
 
-public class CommentAnnotation extends APDMetaObject {
+public class COSObjectContext {
 
-	public static final AObjectType COMMENT = new AObjectType() {
-		public String toString() {
-			return "COMMENT";
-		}
-	};
-	
+	private final COSBasedObject object;
+	private boolean createdID = false;
+
 	/***********************************************************************************
 	 * CONSTRUCTORS
-	 * @param context 
 	 **********************************************************************************/
-	protected CommentAnnotation(long uid, COSObjectContext context) {
-		super(uid, context);
+	
+	public COSObjectContext(COSBasedObject object) {
+		this.object = object;
 	}
 	
 	/***********************************************************************************
 	 * METHODS
 	 **********************************************************************************/
 
+	public COSBasedObject getCOSObject() {
+		return this.object;
+	}
+	
+	public void setCreatedID(boolean isNew) {
+		this.createdID  = isNew;
+	}
+	
+	public boolean isNewID() {
+		return this.createdID;
+	}
 	/***********************************************************************************
 	 * REQUIRED METHODS FOR INTERFACES
 	 **********************************************************************************/
-	public AObjectType getType() {
-		return COMMENT;
-	}
 }

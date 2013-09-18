@@ -3,7 +3,6 @@ package org.docear.pdf.feature;
 import java.io.IOException;
 import java.util.List;
 
-import de.intarsys.pdf.cos.COSBasedObject;
 import de.intarsys.pdf.cos.COSNull;
 import de.intarsys.pdf.cos.COSObject;
 import de.intarsys.pdf.cos.COSString;
@@ -45,12 +44,14 @@ public abstract class APDMetaObjectExtractor {
 		this.document.close();
 	}
 	
-	protected long getOrCreateUID(COSBasedObject annotation) {
-		COSObject dcr_uid = annotation.cosGetField(APDMetaObject.UNIQUE_IDENTIFIER);
+	protected long getOrCreateUID(COSObjectContext context) {
+		context.setCreatedID(false);
+		COSObject dcr_uid = context.getCOSObject().cosGetField(APDMetaObject.UNIQUE_IDENTIFIER);
 		if (COSNull.NULL.equals(dcr_uid)) {
 			dcr_uid = COSString.create(Long.toString(APDMetaObject.createUID()));
-			annotation.cosSetField(APDMetaObject.UNIQUE_IDENTIFIER, dcr_uid);
+			context.getCOSObject().cosSetField(APDMetaObject.UNIQUE_IDENTIFIER, dcr_uid);
 			setDocumentModified(true);
+			context.setCreatedID(true);
 		}
 		return Long.parseLong(dcr_uid.stringValue());
 	}
