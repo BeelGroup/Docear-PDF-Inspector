@@ -11,7 +11,7 @@ The main features of Docear’s PDF Inspector are
 * Reads all PDF versions (other tools such as SciPlore Xtract or ParsCit are using PDFBox for processing the PDFs. However, PDFBox sometimes has problems extracting text from PDFs not being 100% compliant to the PDF standard – Docear’s PDF Inspector is based on jPod, which is more tolerant)
 * Written entirely in JAVA 1.6. Hence, Docear’s PDF Inspector runs on any major operating system, including Windows, Linux, and Mac OS, without any other tools required (besides the JAVA run time environment, of course)
 * Completely independent of further tools – you only need Docear’s PDF Inspector, that’s it (e.g. SciPlore Xtract requires pdftohtml to be installed)
-* Released under the [NU General Public License (GPL) 2 or later](http://www.gnu.org/licenses/gpl-2.0.html), which means it is completely free to use and its source code can be downloaded and modified by anyone.
+* Released under the [GNU General Public License (GPL) 2 or later](http://www.gnu.org/licenses/gpl-2.0.html), which means it is completely free to use and its source code can be downloaded and modified by anyone.
 
 Please, visit [https://www.docear.org/software/add-ons/docears-pdf-inspector/](https://www.docear.org/software/add-ons/docears-pdf-inspector/)
 for further details.
