@@ -1,5 +1,6 @@
 package org.docear.pdf.annotation;
 
+import java.awt.geom.AffineTransform;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,16 +11,21 @@ import org.docear.pdf.feature.COSObjectContext;
 import org.docear.pdf.feature.CachedPDMetaObjectExtractor;
 import org.docear.pdf.feature.PageDestination;
 
+import de.intarsys.pdf.cds.CDSRectangle;
+import de.intarsys.pdf.content.CSDeviceBasedInterpreter;
+import de.intarsys.pdf.content.text.CSTextExtractor;
 import de.intarsys.pdf.pd.PDAnnotation;
 import de.intarsys.pdf.pd.PDAnnotationTools;
 import de.intarsys.pdf.pd.PDAnyAnnotation;
 import de.intarsys.pdf.pd.PDDocument;
 import de.intarsys.pdf.pd.PDHighlightAnnotation;
+import de.intarsys.pdf.pd.PDPage;
 import de.intarsys.pdf.pd.PDSquigglyAnnotation;
 import de.intarsys.pdf.pd.PDStrikeOutAnnotation;
 import de.intarsys.pdf.pd.PDTextAnnotation;
 import de.intarsys.pdf.pd.PDTextMarkupAnnotation;
 import de.intarsys.pdf.pd.PDUnderlineAnnotation;
+import de.intarsys.pdf.tools.kernel.PDFGeometryTools;
 
 public class AnnotationExtractor extends CachedPDMetaObjectExtractor {
 	private boolean ignoreComments = false;
@@ -124,9 +130,32 @@ public class AnnotationExtractor extends CachedPDMetaObjectExtractor {
 			COSObjectContext context = new COSObjectContext(annotation);
 			APDMetaObject meta = new HighlightAnnotation(getOrCreateUID(context), context);
 			meta.setObjectNumber(objectNumber);
+			
+			PDTextMarkupAnnotation markupAnnotation = (PDTextMarkupAnnotation)annotation;
+			float[] quadpoints = markupAnnotation.getQuadPoints();				
+			if(quadpoints.length % 8 == 0){
+				StringBuilder sb = new StringBuilder();
+				for(int i = 0; i < quadpoints.length / 8; i++){
+					CDSRectangle rect = new CDSRectangle(quadpoints[8*i+4], quadpoints[8*i+5], quadpoints[8*i+2], quadpoints[8*i+3]);
+					CSTextExtractor textExtractor = new CSTextExtractor();
+					textExtractor.setBounds(rect.toRectangle());
+					PDPage page = annotation.getPage();
+		            AffineTransform pageTx = new AffineTransform();
+		            PDFGeometryTools.adjustTransform(pageTx, page);
+		            textExtractor.setDeviceTransform(pageTx);
+		            CSDeviceBasedInterpreter interpreter = new CSDeviceBasedInterpreter(null, textExtractor);
+		            interpreter.process(page.getContentStream(), page.getResources());
+		            sb.append(textExtractor.getContent());
+		            if(i + 1 < quadpoints.length / 8){
+		            	sb.append(System.getProperty("line.separator"));
+		            }
+				}
+				if(!sb.toString().isEmpty()) 
+					meta.setText(sb.toString());
+			}								
 			// String text = extractAnnotationText(pdPage, (PDTextMarkupAnnotation)annotation);
 			// prefer Title from Contents (So updates work)
-			if (annotation.getContents() != null && annotation.getContents().length() > 0) {
+			if (annotation.getContents() != null && annotation.getContents().length() > 0 && meta.getText().isEmpty()) {
 				meta.setText(annotation.getContents());
 			}
 			// then try to extract the text from the bounding rectangle
