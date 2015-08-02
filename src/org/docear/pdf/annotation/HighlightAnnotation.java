@@ -15,7 +15,7 @@ public class HighlightAnnotation extends APDMetaObject {
 	 * CONSTRUCTORS
 	 * @param context 
 	 **********************************************************************************/
-	protected HighlightAnnotation(long uid, COSObjectContext context) {
+	public HighlightAnnotation(long uid, COSObjectContext context) {
 		super(uid, context);
 	}
 	
