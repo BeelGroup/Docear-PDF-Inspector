@@ -19,7 +19,10 @@ public class OptionParser {
 		final Options options = createCommandLineOptions();
 		CommandLine cl = null;
 		try {
-			cl = commandlineparser.parse(options, args, true);
+			cl = commandlineparser.parse(
+					options, 
+					args   , 
+					false   ); // do not stop at non option
 		}
 		catch (final ParseException exp) {
 			System.err.println("Unexpected exception:" + exp.getMessage());
@@ -146,5 +149,4 @@ public class OptionParser {
 			System.exit(status);
 		}
 	}
-
 }
